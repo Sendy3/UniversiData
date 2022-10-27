@@ -86,6 +86,20 @@ La informacion se puede obtener del siguiente enlace: https://www.valencia.es/da
 
 
 
+cod_universidad: Código de la Universidad
+
+des_universidad: 	Nombre de la Universidad
+
+curso_academico: Curso académico de referencia
+
+cod_tipo_programa_mov: Código de la tipología del programa de movilidad (1 para "Estudios y/o proyecto fin de grado, 2 para "Estudios + prácticas, 3 para "Sólo prácticas, 4 para "otros)
+
+
+
+
+
+
+
 
 # 2. Importacion de datos
 
