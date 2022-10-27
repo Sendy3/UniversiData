@@ -7,9 +7,9 @@ params:
   lang: ES
 lang: "`r switch(params$lang, ES = 'es-ES', EN = 'en-US')`"
 output:
-  pdf_document: default
-  word_document: default
   html_document: default
+  word_document: default
+  pdf_document: default
 ---
 
 
@@ -139,24 +139,4 @@ all(igual)
 ```
 
 
-
-```{r}
-library(readxl)
-
-#UC3M-Movilidad-Entrantes
-
-uc3m_movilidad_entrante_2017_18_anonimizado <- read_excel("uc3m-movilidad-entrante-2017-18-anonimizado.xlsx")
-
-uc3m_movilidad_entrante_2018_19_anonimizado <- read_excel("uc3m-movilidad-entrante-2018-19-anonimizado.xlsx")
-
-uc3m_movilidad_entrante_2019_20_anonimizado <- read_excel("uc3m-movilidad-entrante-2019-20-anonimizado.xlsx")
-
-uc3m_movilidad_entrante_2020_21_anonimizado <- read_excel("uc3m-movilidad-entrante-2020-21-anonimizado.xlsx")
-
-
-
-#UC3M-Movilidad-Salientes
-
-
-```
 
