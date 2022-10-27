@@ -1,8 +1,8 @@
 ---
 title: "Universitaris pel món,"
-subtitle: I Datathon - UniversiData
+subtitle: "I Datathon - UniversiData"
 author: "Gema Bravo, Olaf Meneses, Sandra Paniagua, Josep Peiró, Wilson Portillo"
-date:  "`r Sys.Date()`"  #Pondría la fecha del día actual
+date:  "27/10/2022"  #Pondría la fecha del día actual
 params:
   lang: ES
 lang: "`r switch(params$lang, ES = 'es-ES', EN = 'en-US')`"
@@ -104,6 +104,41 @@ cod_tipo_programa_mov: Código de la tipología del programa de movilidad (1 par
 # 2. Importacion de datos
 
 Para realizar la importación de los datos de forma correcta, descargamos los ficheros csv de la página web. De esta forma, cada vez que se ejecute el archivo los datos se actualizarán añadiendose los nuevos valores. Así lograremos una información completa y actualizada en el momento de ejecutar el programa, que es algo muy importante a la hora de analizar la información, pudiendo estos usarse  también en el estudio automáticamente.
+
+```{r, echo=FALSE}
+entrada = list()
+salida = list()
+
+#str_match(list.files("data"), "^(.+)-(.+)-(.+)-(.+)-(.+)-")
+
+for (i in list.files("data")){
+  var = str_match(i, "^(.+)-(.+)-(.+)-(.+)-(.+)-")
+  dataset = data.frame(read_csv(str_c("data/", i)))
+  dataset %<>% mutate(universidad = var[,2], movilidad = var[,4], agno = var[,5])
+  if (var[,4] == "entrante"){
+    entrada[[i]] = dataset
+  }else if (var[,4] == "saliente"){
+    salida[[i]] = dataset
+  }
+}
+```
+
+
+```{r}
+columnas = colnames(entrada$`uam-movilidad-entrante-2017-18-anonimizado.csv`)
+igual = F
+for (i in entrada){
+  igual = colnames(i) == columnas & igual
+}
+
+columnas = colnames(salida$`uam-movilidad-saliente-2017-18-anonimizado.csv`)
+for (i in salida){
+  igual = colnames(i) == columnas & !igual
+}
+all(igual)
+```
+
+
 
 ```{r}
 library(readxl)
