@@ -1,0 +1,113 @@
+---
+title: "Universitaris pel món,"
+subtitle: I Datathon - UniversiData
+author: "Gema Bravo, Olaf Meneses, Sandra Paniagua, Josep Peiró, Wilson Portillo"
+date:  "`r Sys.Date()`"  #Pondría la fecha del día actual
+params:
+  lang: ES
+lang: "`r switch(params$lang, ES = 'es-ES', EN = 'en-US')`"
+output:
+  pdf_document: default
+  word_document: default
+  html_document: default
+---
+
+
+```{r setup, cache = F,  message = F, warning = F, tidy = F, include=FALSE}
+# CONFIGURACIÓN GENERAL
+library(knitr)
+options(width = 100)
+
+opts_chunk$set(echo=F, message = F, error = F, warning = F, comment = NA, fig.align = 'center', dpi = 200, tidy = F, cache.path = '.cache/', fig.path = './figura/')
+
+knit_hooks$set(inline = function(x) {
+  
+  if(is.numeric(x)) {
+    round(x, getOption('digits'))
+  } else {
+    paste(as.character(x), collapse = ', ')
+  }
+})
+
+```
+
+```{r, echo = FALSE, include=FALSE}
+
+# Especificamos las librerías necesarias en esta lista
+
+packages = c("tidyverse","knitr", "lubridate", "readr", "dplyr", "forcats", "lubridate", "magrittr", "stringr", "tibble", "tidyr", "datasets", "RColorBrewer","nycflights13", "base", "datasets", "ggplot2", "plotly", "highcharter")
+
+package.check <- lapply(packages, FUN = function(x) {
+  if (!require(x, character.only = TRUE)) {
+    install.packages(x, dependencies = TRUE,repos='http://cran.rediris.es')
+  }
+  library(x, character.only = TRUE)
+})
+
+search()
+
+```
+
+\bigskip
+
+\bigskip
+
+\noindent\makebox[\linewidth]{\rule{\textwidth}{0.4pt}}
+
+\bigskip
+
+\tableofcontents
+
+\bigskip
+
+\noindent\makebox[\linewidth]{\rule{\textwidth}{0.4pt}}
+
+
+\newpage
+
+
+
+# 1. Introducción del trabajo
+
+El objetivo de este trabajo es analizar los datos recogidos por ........................
+
+
+
+Con la ayuda de diferentes tablas y graficos vamos a analizar los datos y dar respuesta a varias de las preguntas que estan planteadas a lo largo del trabajo.
+
+Los datos los hemos obtenido gracias a que están disponibles en la plataforma de datos abiertos del ....
+
+
+
+La informacion se puede obtener del siguiente enlace: https://www.valencia.es/dadesobertes/es/data/?groups=medio-ambiente
+
+
+  ** Informacion de cada columna ** 
+
+
+
+
+# 2. Importacion de datos
+
+Para realizar la importación de los datos de forma correcta, descargamos los ficheros csv de la página web. De esta forma, cada vez que se ejecute el archivo los datos se actualizarán añadiendose los nuevos valores. Así lograremos una información completa y actualizada en el momento de ejecutar el programa, que es algo muy importante a la hora de analizar la información, pudiendo estos usarse  también en el estudio automáticamente.
+
+```{r}
+library(readxl)
+
+#UC3M-Movilidad-Entrantes
+
+uc3m_movilidad_entrante_2017_18_anonimizado <- read_excel("uc3m-movilidad-entrante-2017-18-anonimizado.xlsx")
+
+uc3m_movilidad_entrante_2018_19_anonimizado <- read_excel("uc3m-movilidad-entrante-2018-19-anonimizado.xlsx")
+
+uc3m_movilidad_entrante_2019_20_anonimizado <- read_excel("uc3m-movilidad-entrante-2019-20-anonimizado.xlsx")
+
+uc3m_movilidad_entrante_2020_21_anonimizado <- read_excel("uc3m-movilidad-entrante-2020-21-anonimizado.xlsx")
+
+
+
+#UC3M-Movilidad-Salientes
+
+
+```
+
