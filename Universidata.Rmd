@@ -1,5 +1,5 @@
 ---
-title: "Universitaris pel món,"
+title: "Universitaris pel món"
 subtitle: "I Datathon - UniversiData"
 author: "Gema Bravo, Olaf Meneses, Sandra Paniagua, Josep Peiró, Wilson Portillo"
 date:  "27/10/2022"  #Pondría la fecha del día actual
@@ -36,7 +36,7 @@ knit_hooks$set(inline = function(x) {
 
 # Especificamos las librerías necesarias en esta lista
 
-packages = c("tidyverse","knitr", "lubridate", "readr", "dplyr", "forcats", "lubridate", "magrittr", "stringr", "tibble", "tidyr", "datasets", "RColorBrewer","nycflights13", "base", "datasets", "ggplot2", "plotly", "highcharter", "purrr")
+packages = c("tidyverse","knitr", "lubridate", "readr", "dplyr", "forcats", "lubridate", "magrittr", "stringr", "tibble", "tidyr", "datasets", "RColorBrewer","nycflights13", "base", "datasets", "ggplot2", "plotly", "highcharter", "purrr", "shiny", "shinyWidgets", "shinythemes", "shinydashboard", "plotly")
 
 package.check <- lapply(packages, FUN = function(x) {
   if (!require(x, character.only = TRUE)) {
@@ -153,3 +153,72 @@ for (i in 2:length(entrada)){
   datos_salida = rbind(datos_salida, salida[[i]])
 }
 ```
+
+```{r}
+library(shiny)
+library(shinyWidgets)
+library(shinythemes)
+library(shinydashboard)
+```
+
+```{r}
+ui <- fluidPage(
+  theme = shinythemes::shinytheme("spacelab"),
+  tabsetPanel(
+    tabPanel(
+      "Home",
+      h1("Universitaris pel món"),
+      h4("Universitarios por el mundo"),
+      pre("Autores:
+          Sandra Paniagua Sanchez
+          Wilson Paul Portillo Barriga
+          Gema Bravo Aguilera
+          Olaf Meneses Albalat"),
+      sidebarLayout(position = "right",
+        sidebarPanel(
+          pre("Trabajo desarrollado por el grupo 
+independiente de estudiantes de la 
+Universidad de Valencia que conforman 
+el grupo de DataLab") 
+        ),
+        mainPanel("El trabajo consiste", span("en cambiar de colorines las letras", style = "color:coral"))
+      )
+      
+      
+
+    ),
+    tabPanel(
+      "Graficos",
+      sidebarLayout(
+        sidebarPanel(
+          textInput(
+            inputId = "varx",
+            label = "Variable eje x"
+          ),
+          textInput(
+            inputId = "vary",
+            label = "Variable eje y"
+          )
+        ),
+        mainPanel(plotOutput("plot")
+        )
+      )
+    )
+  )
+)
+
+server <- function(input, output, session){
+  output$Info = renderText({
+		paste("Universitarios por el mundo", "Trabajo desarrollado por", sep="\n")
+	})
+  output$plot <- renderPlot({
+    ggplot(datos_entrada, aes(x = des_genero, y = des_municipio_univ_procedencia))+geom_point()
+  })
+}
+
+shinyApp(ui, server)
+```
+```{r}
+shinyWidgetsGallery()
+```
+
