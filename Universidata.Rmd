@@ -15,6 +15,7 @@ output:
 
 ```{r setup, cache = F,  message = F, warning = F, tidy = F, include=FALSE}
 # CONFIGURACIÓN GENERAL
+rm(list=ls())
 library(knitr)
 options(width = 100)
 
@@ -35,7 +36,7 @@ knit_hooks$set(inline = function(x) {
 
 # Especificamos las librerías necesarias en esta lista
 
-packages = c("tidyverse","knitr", "lubridate", "readr", "dplyr", "forcats", "lubridate", "magrittr", "stringr", "tibble", "tidyr", "datasets", "RColorBrewer","nycflights13", "base", "datasets", "ggplot2", "plotly", "highcharter")
+packages = c("tidyverse","knitr", "lubridate", "readr", "dplyr", "forcats", "lubridate", "magrittr", "stringr", "tibble", "tidyr", "datasets", "RColorBrewer","nycflights13", "base", "datasets", "ggplot2", "plotly", "highcharter", "purrr")
 
 package.check <- lapply(packages, FUN = function(x) {
   if (!require(x, character.only = TRUE)) {
@@ -109,23 +110,23 @@ Para realizar la importación de los datos de forma correcta, descargamos los fi
 entrada = list()
 salida = list()
 
-#str_match(list.files("data"), "^(.+)-(.+)-(.+)-(.+)-(.+)-")
+str_match(list.files("data"), "^(.+)-(.+)-(.+)-(.+)-(.+)-")
 
 for (i in list.files("data")){
   var = str_match(i, "^(.+)-(.+)-(.+)-(.+)-(.+)-")
   dataset = data.frame(read_csv(str_c("data/", i)))
-  dataset %<>% mutate(universidad = var[,2], movilidad = var[,4], agno = var[,5])
+  #print(dataset)
+  dataset %<>% mutate(universidad = var[,2], movilidad = var[,4], anyo = var[,5])
   if (var[,4] == "entrante"){
-    entrada[[i]] = dataset
+    entrada[[str_c(var[,2], var[,4], var[,5], sep = "_")]] = dataset
   }else if (var[,4] == "saliente"){
-    salida[[i]] = dataset
+    salida[[str_c(var[,2], var[,4], var[,5], sep = "_")]] = dataset
   }
 }
 ```
 
-
 ```{r}
-columnas = colnames(entrada$`uam-movilidad-entrante-2017-18-anonimizado.csv`)
+columnas = colnames(entrada$uam_entrante_2017)
 igual = F
 for (i in entrada){
   igual = colnames(i) == columnas & igual
@@ -138,25 +139,17 @@ for (i in salida){
 all(igual)
 ```
 
-
-
 ```{r}
-library(readxl)
+datos_entrada = entrada[[1]]
+datos_entrada
+for (i in 2:length(entrada)){
+  datos_entrada = rbind(datos_entrada, entrada[[i]])
+}
+datos_entrada
 
-#UC3M-Movilidad-Entrantes
-
-uc3m_movilidad_entrante_2017_18_anonimizado <- read_excel("uc3m-movilidad-entrante-2017-18-anonimizado.xlsx")
-
-uc3m_movilidad_entrante_2018_19_anonimizado <- read_excel("uc3m-movilidad-entrante-2018-19-anonimizado.xlsx")
-
-uc3m_movilidad_entrante_2019_20_anonimizado <- read_excel("uc3m-movilidad-entrante-2019-20-anonimizado.xlsx")
-
-uc3m_movilidad_entrante_2020_21_anonimizado <- read_excel("uc3m-movilidad-entrante-2020-21-anonimizado.xlsx")
-
-
-
-#UC3M-Movilidad-Salientes
-
-
+datos_salida = salida[[1]]
+datos_salida
+for (i in 2:length(entrada)){
+  datos_salida = rbind(datos_salida, salida[[i]])
+}
 ```
-
