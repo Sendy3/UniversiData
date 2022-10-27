@@ -7,9 +7,9 @@ params:
   lang: ES
 lang: "`r switch(params$lang, ES = 'es-ES', EN = 'en-US')`"
 output:
-  pdf_document: default
-  word_document: default
   html_document: default
+  word_document: default
+  pdf_document: default
 ---
 
 
