@@ -110,11 +110,11 @@ Para realizar la importación de los datos de forma correcta, descargamos los fi
 entrada = list()
 salida = list()
 
-str_match(list.files("data"), "^(.+)-(.+)-(.+)-(.+)-(.+)-")
+#str_match(list.files("data"), "^(.+)-(.+)-(.+)-(.+)-(.+)-")
 
 for (i in list.files("data")){
   var = str_match(i, "^(.+)-(.+)-(.+)-(.+)-(.+)-")
-  dataset = data.frame(read_csv(str_c("data/", i)))
+  dataset = data.frame(read.csv(str_c("data/", i)))
   #print(dataset)
   dataset %<>% mutate(universidad = var[,2], movilidad = var[,4], anyo = var[,5])
   if (var[,4] == "entrante"){
@@ -169,11 +169,13 @@ ui <- fluidPage(
       "Home",
       h1("Universitaris pel món"),
       h4("Universitarios por el mundo"),
+      h6("Trabajo presentado al I Datathon de Universidata"),
       pre("Autores:
           Sandra Paniagua Sanchez
           Wilson Paul Portillo Barriga
           Gema Bravo Aguilera
-          Olaf Meneses Albalat"),
+          Olaf Meneses Albalat
+          Josep Peiró Ramos"),
       sidebarLayout(position = "right",
         sidebarPanel(
           pre("Trabajo desarrollado por el grupo 
@@ -188,7 +190,7 @@ el grupo de DataLab")
 
     ),
     tabPanel(
-      "Graficos",
+      "Estudiantes entrantes",
       sidebarLayout(
         sidebarPanel(
           textInput(
@@ -203,6 +205,21 @@ el grupo de DataLab")
         mainPanel(plotOutput("plot")
         )
       )
+    ),
+    tabPanel(
+      "Estudiantes salientes",
+      sidebarLayout(
+        sidebarPanel(
+          "Escoge la(s) universidad(es) de las que quieras ver la informacion.",
+          checkboxGroupButtons(
+             inputId = "Unis",
+             label = "Choices", 
+             choices = unique(datos_salida$universidad),
+             status = "danger"
+          )
+        ),
+        mainPanel(plotOutput("Yoquese"))
+      )
     )
   )
 )
@@ -213,6 +230,9 @@ server <- function(input, output, session){
 	})
   output$plot <- renderPlot({
     ggplot(datos_entrada, aes(x = des_genero, y = des_municipio_univ_procedencia))+geom_point()
+  })
+  output$Yoquese <- renderPlot({
+    ggplot(datos_salida %>% group_by(universidad) %>% count() %>% ungroup()%>% filter(universidad %in% input$Unis) , aes(universidad, n))+geom_col()
   })
 }
 
