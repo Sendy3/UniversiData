@@ -154,6 +154,67 @@ for (i in 2:length(entrada)){
 }
 ```
 
+
+# 3. Valores Erroneos 
+
+Hacemos una comprobación de como se distribuyen los valores de las 
+variables numéricas 
+
+```{r}
+library(kableExtra)
+library(pastecs)
+
+
+partes <- c("(?<!procedencia|destino)$",
+           "procedencia$", 
+           "destino$")
+
+
+for (i in 1:length(partes)) {
+  print(datos_entrada %>%
+        select(where(is.numeric)) %>%
+        select(grep(partes[i], names(.),perl = TRUE)) %>%
+        stat.desc() %>%
+        kbl() %>%
+        kable_material(c("striped", "hover")))
+        
+}
+
+```
+
+Observamos que no hay valores nulos (nbr.null) aunque si contamos con 
+un par de valores perdidos (nbr.na).
+No contamos con valores infinitos ni valores sin sentido en ninguna de 
+las variables.
+
+# 4. Valores Faltanttes
+
+Visualizamos las variables con más valores faltantes
+
+```{r}
+
+library(DataExplorer)
+
+plot_missing(datos_entrada, missing_only = T)
+
+```
+
+Al faltar tantos datos de cod_municipio_univ_procedencia, 
+cod_ambito_univ_destiono y cod_ambito_univ_procedencia los quitamos de 
+los datos al no poder trabajar con ellos.
+
+```{r}
+datos_entrada <- drop_columns(datos_entrada,
+        c("cod_municipio_univ_procedencia", 
+          "cod_ambito_univ_destino", 
+          "cod_ambito_univ_procedencia"))
+```
+
+También contamos con variables con porcentajes significantes de datos 
+faltantes aunque dada su importancia para el análisis posterior los 
+conservamos.
+
+
 ```{r}
 library(shiny)
 library(shinyWidgets)
