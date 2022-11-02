@@ -303,3 +303,30 @@ shinyApp(ui, server)
 shinyWidgetsGallery()
 ```
 
+```{r map}
+library(sf)
+library(rnaturalearthdata)
+library(rnaturalearth)
+library(simplevis)
+
+map <- ne_countries(50,
+  "countries",
+  returnclass = "sf"
+) %>% 
+  mutate(iso_n3 = as.integer(iso_n3))
+
+country_count <- datos_salida %>%
+  count(cod_pais_univ_destino) %>% 
+  right_join(map, by = c("cod_pais_univ_destino" = "iso_n3"))
+
+country_count_sf <- st_as_sf(country_count)
+
+p <- ggplot() +
+  geom_sf(data = country_count_sf, aes(fill = n))
+
+ggplotly(p)
+
+leaf_sf_col(country_count_sf, n,
+               col_method = "bin",
+               col_cuts = c(0, 100, 250, 400, 500, 1000, 1500, 2000, 3000, Inf))
+```
